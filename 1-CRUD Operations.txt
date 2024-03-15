@@ -1,0 +1,317 @@
+//show dbs: To see which databases you have on this mongodb server
+
+----------------------------------------
+show dbs
+admin    40.00 KiB
+config   72.00 KiB
+local    80.00 KiB
+world   552.00 KiB
+
+------------------------------------------
+use flights
+switched to db flights
+
+show dbs
+admin    40.00 KiB
+bgv      72.00 KiB
+config   72.00 KiB
+local    80.00 KiB
+world   552.00 KiB
+
+------------------------------------------
+
+db.FlightData.insertOne({
+    "departureAirport": "MUC",
+    "arrivalAirport": "SFO",
+    "aircraft": "Airbus A380",
+    "distance": 12000,
+    "intercontinental": true
+  })
+
+{
+  acknowledged: true,
+  insertedId: ObjectId('65f18450b030a6179869465e')
+}
+-------------------------------------------
+
+db.FlightData.find().pretty()
+
+{
+  _id: ObjectId('65f18450b030a6179869465e'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true
+}
+
+-------------------------------------------
+
+db.FlightData.insertOne({departureAirport : "TXL",arrivalAirport : "LHR"})
+
+{
+  acknowledged: true,
+  insertedId: ObjectId('65f18b52b030a6179869465f')
+}
+
+db.FlightData.find().pretty()
+
+{
+  _id: ObjectId('65f18450b030a6179869465e'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true
+}
+{
+  _id: ObjectId('65f18b52b030a6179869465f'),
+  departureAirport: 'TXL',
+  arrivalAirport: 'LHR'
+}
+
+-------------------------------------------
+
+We can change id with our specified id name by "_id: name"
+
+db.FlightData.insertOne({departureAirport : "TXL",arrivalAirport : "LHR" , _id : "d-03"})
+
+{
+  acknowledged: true,
+  insertedId: 'd-03'
+}
+
+db.FlightData.find({_id:"d-03"})
+
+{
+  _id: 'd-03',
+  departureAirport: 'TXL',
+  arrivalAirport: 'LHR'
+}
+
+-------------------------------------------
+
+CRUD OPERATIONS QUERIES -->
+
+Create:
+
+insertOne(data,options)
+insertMany(data,options)
+
+Read:
+
+find(filter,options)
+findOne(filter,options)
+
+Update:
+
+updateOne(filter,data,options)
+updateMany(filter,data,options)
+replaceOne(filter,data,options)
+
+Delete:
+
+deleteOne(filter,options)
+deleteMany(filter,options)
+
+-------------------------------------------
+
+db.FlightData.updateOne({distance:12000},{$set:{marker:"delete"}})
+
+db.FlightData.find()
+
+{
+  _id: ObjectId('65f18450b030a6179869465e'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true,
+  marker: 'delete'
+}
+{
+  _id: 'd-03',
+  departureAirport: 'TXL',
+  arrivalAirport: 'LHR'
+}
+
+-------------------------------------------
+
+db.FlightData.updateMany({},{$set:{marker:"toDelete"}})
+
+db.FlightData.find()
+
+{
+  _id: ObjectId('65f18450b030a6179869465e'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true,
+  marker: 'toDelete'
+}
+{
+  _id: ObjectId('65f18450b030a6179869465e'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true,
+  marker: 'toDelete'
+}
+
+-------------------------------------------
+
+db.FlightData.deleteMany({marker:"toDelete"})
+
+-------------------------------------------
+
+db.FlightData.insertMany([
+  {
+    "departureAirport": "MUC",
+    "arrivalAirport": "SFO",
+    "aircraft": "Airbus A380",
+    "distance": 12000,
+    "intercontinental": true
+  },
+  {
+    "departureAirport": "LHR",
+    "arrivalAirport": "TXL",
+    "aircraft": "Airbus A320",
+    "distance": 950,
+    "intercontinental": false
+  }
+]
+)
+
+-------------------------------------------
+
+Greater than : $gt
+
+{
+  _id: ObjectId('65f27214f68d0293e015feb2'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true
+}
+
+-------------------------------------------
+
+ReplaceOne:
+
+db.FlightData.replaceOne({_id:ObjectId('65f27214f68d0293e015feb3')},{
+    "departureAirport": "MUC",
+    "arrivalAirport": "SFO",
+    "aircraft": "Airbus A380",
+    "distance": 12000,
+    "intercontinental": false
+  })
+
+-------------------------------------------
+
+To get fetch all data at once we can use forEach:
+ 
+db.passengers.find().forEach((passengerData)=>{printjson(passengerData)})
+
+-------------------------------------------
+
+Embedded Documents:
+
+db.FlightData.updateMany({},{$set : {status:{description:"on-time",lastUpdated:"1 hour ago"}}})
+
+{
+  _id: ObjectId('65f27214f68d0293e015feb2'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true,
+  status: {
+    description: 'on-time',
+    lastUpdated: '1 hour ago'
+  }
+}
+{
+  _id: ObjectId('65f27214f68d0293e015feb3'),
+  departureAirport: 'LHR',
+  arrivalAirport: 'TXL',
+  aircraft: 'Airbus A320',
+  distance: 950,
+  intercontinental: false,
+  delayed: true,
+  status: {
+    description: 'on-time',
+    lastUpdated: '1 hour ago'
+  }
+}
+
+-------------------------------------------
+
+*******************************************
+Working with arrays:
+*******************************************
+
+-------------------------------------------
+
+List of strings:
+
+db.passengers.updateOne({name:'Albert Twostone'},{$set:{hobbies:["dancing","travelling"]}})
+
+{
+  _id: ObjectId('65f29307312e5d8b5b7906e7'),
+  name: 'Albert Twostone',
+  age: 68,
+  hobbies: [
+    'dancing',
+    'travelling'
+  ]
+}
+
+-------------------------------------------
+
+Finding element in an array:
+
+db.passengers.findOne({hobbies:"dancing"})
+
+{
+  _id: ObjectId('65f29307312e5d8b5b7906e7'),
+  name: 'Albert Twostone',
+  age: 68,
+  hobbies: [
+    'dancing',
+    'travelling'
+  ]
+}
+
+-------------------------------------------
+
+nested document data fetching
+
+db.FlightData.findOne({"status.description":"on-time"})
+
+{
+  _id: ObjectId('65f27214f68d0293e015feb2'),
+  departureAirport: 'MUC',
+  arrivalAirport: 'SFO',
+  aircraft: 'Airbus A380',
+  distance: 12000,
+  intercontinental: true,
+  status: {
+    description: 'on-time',
+    lastUpdated: '1 hour ago'
+  }
+}
+
+-------------------------------------------
+
+
+
+
+
+
+
+
+
+

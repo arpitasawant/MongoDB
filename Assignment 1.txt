@@ -1,0 +1,163 @@
+1.Insert 3 patient records with at least 1 history entry per patient
+
+-->
+
+Query:
+db.patients.insertMany([
+
+{"firstName" :"Priya",
+"lastName" : "Shinde",
+"age":21,
+"history":[
+{"disease":"cold","treatment":"Vicks"}
+]},
+
+{"firstName" :"Ramesh",
+"lastName" : "Kumar",
+"age":31,
+"history":[
+{"disease":"fever","treatment":"Acetaminophen"}
+]},
+
+{"firstName" :"Anand",
+"lastName" : "Ambani",
+"age":41,
+"history":[
+{"disease":"cough","treatment":"Delsym"}
+]}
+])
+
+Output:
+
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906eb'),
+  firstName: 'Priya',
+  lastName: 'Shinde',
+  age: 21,
+  history: [
+    {
+      disease: 'cold',
+      treatment: 'Vicks'
+    }
+  ]
+}
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ec'),
+  firstName: 'Ramesh',
+  lastName: 'Kumar',
+  age: 31,
+  history: [
+    {
+      disease: 'fever',
+      treatment: 'Acetaminophen'
+    }
+  ]
+}
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ed'),
+  firstName: 'Anand',
+  lastName: 'Ambani',
+  age: 41,
+  history: [
+    {
+      disease: 'cough',
+      treatment: 'Delsym'
+    }
+  ]
+}
+
+******************************************************************************
+
+2.Update patient data of 1 patient with new age,name,and history entry
+
+-->
+
+Query:
+
+db.patients.updateOne({_id:ObjectId('65f2d49d312e5d8b5b7906eb'),"history.disease":"cold"},{$set:{firstName:"Shivani",age:20,"history.$.treatment":"Advil"}})
+
+Output:
+
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906eb'),
+  firstName: 'Shivani',
+  lastName: 'Shinde',
+  age: 20,
+  history: [
+    {
+      disease: 'cold',
+      treatment: 'Advil'
+    }
+  ]
+}
+
+******************************************************************************
+
+3.Find all patients who are older than 30(or a value of your choice)
+
+Query:
+
+db.patients.find({age:{$gt:30}})
+
+Output:
+
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ec'),
+  firstName: 'Ramesh',
+  lastName: 'Kumar',
+  age: 31,
+  history: [
+    {
+      disease: 'fever',
+      treatment: 'Acetaminophen'
+    }
+  ]
+}
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ed'),
+  firstName: 'Anand',
+  lastName: 'Ambani',
+  age: 41,
+  history: [
+    {
+      disease: 'cough',
+      treatment: 'Delsym'
+    }
+  ]
+}
+
+******************************************************************************
+
+4.Delete all patients who got a cold as a disease
+->
+
+Query:
+
+db.patients.deleteMany({"history.disease":"cold"})
+
+Output:
+
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ec'),
+  firstName: 'Ramesh',
+  lastName: 'Kumar',
+  age: 31,
+  history: [
+    {
+      disease: 'fever',
+      treatment: 'Acetaminophen'
+    }
+  ]
+}
+{
+  _id: ObjectId('65f2d49d312e5d8b5b7906ed'),
+  firstName: 'Anand',
+  lastName: 'Ambani',
+  age: 41,
+  history: [
+    {
+      disease: 'cough',
+      treatment: 'Delsym'
+    }
+  ]
+}

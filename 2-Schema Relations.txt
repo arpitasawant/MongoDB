@@ -1,0 +1,4 @@
+To get rid of your data,you can simply load the database you want to rid by using --> use databaseName and then execute --> db.dropDatabase()
+
+You could get rid of a single collection in a database via --> db.myCollection.drop()
+
